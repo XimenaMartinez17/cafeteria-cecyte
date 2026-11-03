@@ -222,11 +222,14 @@ function escucharAdmin() {
         console.error("Error del menú:", error);
 
         $("adminMenu").textContent =
-            "No se pudo cargar el menú.";
+            "No se pudo cargar el menú. Error: " + error.code;
     });
 
 
     // ESCUCHAR PEDIDOS
+
+    $("adminPedidos").innerHTML =
+        "<p class='muted'>Cargando pedidos...</p>";
 
     stopPedidos = db.collection("pedidos").onSnapshot(snapshot => {
 
@@ -246,7 +249,7 @@ function escucharAdmin() {
         console.error("Error de pedidos:", error);
 
         $("adminPedidos").textContent =
-            "No se pudieron cargar los pedidos.";
+            "No se pudieron cargar los pedidos. Error: " + error.code;
     });
 }
 
@@ -551,7 +554,7 @@ $("formPlatillo").addEventListener("submit", async e => {
 
         console.error("Error al guardar platillo:", error);
 
-        msg("menuMsg", "No se pudo guardar. Revisa los permisos de Firebase.", true);
+        msg("menuMsg", "No se pudo guardar. Error: " + error.code, true);
     }
 });
 
@@ -562,203 +565,133 @@ $("formPlatillo").addEventListener("submit", async e => {
 
 function renderPedidos(pedidos) {
 
-    $("contadorPedidos").textContent =
-        `${pedidos.length} pedidos`;
+    // CONTADOR: ES OPCIONAL EN EL HTML
+    const contador = $("contadorPedidos");
 
+    if (contador) {
+        contador.textContent = `${pedidos.length} pedidos`;
+    }
+
+    const contenedor = $("adminPedidos");
 
     if (!pedidos.length) {
 
-        $("adminPedidos").innerHTML =
-            "<p class='muted'>Todavía no hay pedidos.</p>";
+        contenedor.innerHTML =
+            "<p class='muted'>Todavía no hay pedidos registrados.</p>";
 
         return;
     }
 
+    contenedor.innerHTML = pedidos.map(p => `
 
-    $("adminPedidos").innerHTML = pedidos.map(p => {
+        <article class="pedido">
 
-        const puedeEliminar =
-            p.estadoActualizadoPorEncargada === true ||
-            (p.estado && p.estado !== "Recibido");
+            <div class="pedido-detalle">
 
+                <b>${escapar(p.alumno || "Alumno")}</b>
 
-        return `
+                · ${escapar(p.grupo || "")}
 
-            <article class="pedido">
+                · ${escapar(p.semestre || "")}
 
-                <div class="pedido-detalle">
+                <small>
 
-                    <b>${escapar(p.alumno || "Alumno")}</b>
+                    <br>
 
-                    · ${escapar(p.grupo || "")}
+                    Folio: ${escapar(p.id)}
 
-                    · ${escapar(p.semestre || "")}
+                    <br>
 
-                    <small>
+                    ${(p.items || []).map(i =>
+                        `${escapar(i.nombre)} × ${i.cantidad}`
+                    ).join(", ")}
 
-                        <br>
+                    <br>
 
-                        Folio: ${escapar(p.id)}
+                    Total: ${dinero(p.total)}
 
-                        <br>
+                    · Pago: ${escapar(p.metodoPago || "")}
 
-                        ${(p.items || []).map(i =>
-                            `${escapar(i.nombre)} × ${i.cantidad}`
-                        ).join(", ")}
+                    <br>
 
-                        <br>
+                    Estado del pago:
+                    ${escapar(p.pagoEstado || "Pendiente")}
 
-                        Total: ${dinero(p.total)}
+                    <br>
 
-                        · Pago: ${escapar(p.metodoPago || "")}
+                    Fecha y hora:
+                    ${mostrarFecha(p.fecha)}
 
-                        <br>
+                </small>
 
-                        Estado del pago:
-                        ${escapar(p.pagoEstado || "Pendiente")}
+            </div>
 
-                        <br>
+            <div class="pedido-acciones">
 
-                        Fecha y hora:
-                        ${mostrarFecha(p.fecha)}
+                <span class="estado ${
+                    p.estado === "Cancelado" ? "cancelado" :
+                    p.estado === "Finalizado" ? "finalizado" : ""
+                }">
+                    ${escapar(p.estado || "Recibido")}
+                </span>
 
-                    </small>
+                <select data-status="${p.id}">
 
-                </div>
+                    <option value="">Cambiar estado</option>
 
+                    <option value="Recibido">Recibido</option>
 
-                <div class="pedido-acciones">
+                    <option value="En preparación">En preparación</option>
 
-                    <span class="estado ${
-                        p.estado === "Cancelado" ? "cancelado" :
-                        p.estado === "Finalizado" ? "finalizado" : ""
-                    }">
+                    <option value="Finalizado">Finalizado</option>
 
-                        ${escapar(p.estado || "Recibido")}
+                    <option value="Cancelado">Cancelado</option>
 
-                    </span>
+                </select>
 
+            </div>
 
-                    <select data-status="${p.id}">
+        </article>
 
-                        <option value="">Cambiar estado</option>
+    `).join("");
 
-                        <option value="Recibido">Recibido</option>
 
-                        <option value="En preparación">En preparación</option>
+    // CAMBIAR ESTADO DEL PEDIDO
 
-                        <option value="Finalizado">Finalizado</option>
+    contenedor.querySelectorAll("[data-status]").forEach(select => {
 
-                        <option value="Cancelado">Cancelado</option>
+        select.onchange = async () => {
 
-                    </select>
+            if (!select.value) return;
 
+            const nuevoEstado = select.value;
 
-                    ${puedeEliminar ? `
+            try {
 
-                        <button
-                            type="button"
-                            class="mini-boton"
-                            data-delete="${p.id}">
+                await db.collection("pedidos")
+                    .doc(select.dataset.status)
+                    .update({
 
-                            🗑️ Eliminar pedido
+                        estado: nuevoEstado,
 
-                        </button>
+                        estadoActualizadoPorEncargada: true,
 
-                    ` : `
+                        actualizado:
+                            firebase.firestore.FieldValue.serverTimestamp()
+                    });
 
-                        <small class="muted">
-                            Cambia el estado para habilitar la eliminación.
-                        </small>
+                alert("Estado del pedido actualizado.");
 
-                    `}
+            } catch (error) {
 
-                </div>
+                console.error("Error al actualizar pedido:", error);
 
-            </article>
+                alert("No se pudo actualizar el pedido. Error: " + error.code);
+            }
 
-        `;
-
-    }).join("");
-
-
-    /* =====================================
-       CAMBIAR ESTADO DEL PEDIDO
-    ===================================== */
-
-    $("adminPedidos")
-        .querySelectorAll("[data-status]")
-        .forEach(select => {
-
-            select.onchange = async () => {
-
-                if (!select.value) return;
-
-                const nuevoEstado = select.value;
-
-                try {
-
-                    await db.collection("pedidos")
-                        .doc(select.dataset.status)
-                        .update({
-
-                            estado: nuevoEstado,
-
-                            estadoActualizadoPorEncargada: true,
-
-                            actualizado:
-                                firebase.firestore.FieldValue.serverTimestamp()
-                        });
-
-                    alert("Estado del pedido actualizado.");
-
-                } catch (error) {
-
-                    console.error(error);
-
-                    alert("No se pudo actualizar el pedido.");
-                }
-
-                select.value = "";
-            };
-        });
-
-
-    /* =====================================
-       ELIMINAR PEDIDO
-    ===================================== */
-
-    $("adminPedidos")
-        .querySelectorAll("[data-delete]")
-        .forEach(boton => {
-
-            boton.onclick = async () => {
-
-                const id = boton.dataset.delete;
-
-                const confirmar = confirm(
-                    "¿Deseas eliminar definitivamente este pedido? También desaparecerá del historial del alumno."
-                );
-
-                if (!confirmar) return;
-
-                try {
-
-                    await db.collection("pedidos")
-                        .doc(id)
-                        .delete();
-
-                    alert("Pedido eliminado correctamente.");
-
-                } catch (error) {
-
-                    console.error(error);
-
-                    alert("No se pudo eliminar el pedido. Revisa las reglas de Firebase.");
-                }
-            };
-        });
-
+            select.value = "";
+        };
+    });
 }
 
 
