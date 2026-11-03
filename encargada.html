@@ -1,0 +1,252 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Acceso de encargada | Cafetería escolar</title>
+
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+
+<body>
+
+    <!-- ENCABEZADO -->
+    <header class="barra">
+        <a href="index.html" class="marca">
+            ← Cafetería escolar
+        </a>
+
+        <span>Panel de encargada</span>
+    </header>
+
+
+    <main class="contenedor">
+
+        <!-- INICIO DE SESIÓN -->
+        <section id="loginEncargada" class="panel estrecho">
+
+            <h1>Acceso de encargada</h1>
+
+            <p class="muted">
+                Inicia sesión para administrar la cafetería escolar.
+            </p>
+
+            <form id="formLogin">
+
+                <label for="correo">Correo electrónico</label>
+
+                <input
+                    type="email"
+                    id="correo"
+                    name="correo"
+                    placeholder="Correo de la encargada"
+                    required
+                >
+
+                <label for="contrasena">Contraseña</label>
+
+                <input
+                    type="password"
+                    id="contrasena"
+                    name="contrasena"
+                    placeholder="Ingresa tu contraseña"
+                    required
+                >
+
+                <button
+                    type="submit"
+                    class="boton principal"
+                >
+                    Iniciar sesión
+                </button>
+
+                <p
+                    id="loginMsg"
+                    class="mensaje"
+                    aria-live="polite"
+                ></p>
+
+            </form>
+
+        </section>
+
+
+        <!-- PANEL ADMINISTRATIVO -->
+        <section id="panelEncargada" hidden>
+
+            <div class="encabezado-seccion">
+
+                <div>
+                    <span class="etiqueta">
+                        ADMINISTRACIÓN
+                    </span>
+
+                    <h1>Panel de control</h1>
+
+                    <p class="muted">
+                        Administra el menú y los pedidos de la cafetería.
+                    </p>
+                </div>
+
+                <button
+                    id="cerrarSesion"
+                    class="boton secundario"
+                    type="button"
+                >
+                    Cerrar sesión
+                </button>
+
+            </div>
+
+
+            <!-- ADMINISTRAR MENÚ -->
+            <section class="panel">
+
+                <h2>🍽️ Administrar menú</h2>
+
+                <p class="muted">
+                    Agrega nuevos platillos o modifica los existentes.
+                </p>
+
+                <form id="formPlatillo">
+
+                    <input
+                        type="hidden"
+                        id="platilloId"
+                    >
+
+                    <label for="nombrePlatillo">
+                        Nombre del platillo
+                    </label>
+
+                    <input
+                        type="text"
+                        id="nombrePlatillo"
+                        placeholder="Ej. Torta de jamón"
+                        maxlength="80"
+                        required
+                    >
+
+                    <label for="descripcion">
+                        Descripción
+                    </label>
+
+                    <textarea
+                        id="descripcion"
+                        placeholder="Describe el platillo"
+                        rows="3"
+                    ></textarea>
+
+                    <label for="precio">
+                        Precio
+                    </label>
+
+                    <input
+                        type="number"
+                        id="precio"
+                        min="0.01"
+                        step="0.01"
+                        placeholder="Ej. 35.00"
+                        required
+                    >
+
+                    <label for="imagen">
+                        URL de imagen
+                    </label>
+
+                    <input
+                        type="url"
+                        id="imagen"
+                        placeholder="https://ejemplo.com/imagen.jpg"
+                    >
+
+                    <label for="activo">
+                        Disponibilidad
+                    </label>
+
+                    <select id="activo">
+                        <option value="true">Disponible</option>
+                        <option value="false">No disponible</option>
+                    </select>
+
+                    <div class="acciones">
+
+                        <button
+                            type="submit"
+                            class="boton principal"
+                            id="guardarPlatillo"
+                        >
+                            Guardar platillo
+                        </button>
+
+                        <button
+                            type="button"
+                            class="boton secundario"
+                            id="cancelarEdicion"
+                        >
+                            Limpiar
+                        </button>
+
+                    </div>
+
+                    <p
+                        id="menuMsg"
+                        class="mensaje"
+                        aria-live="polite"
+                    ></p>
+
+                </form>
+
+                <hr>
+
+                <h3>Platillos registrados</h3>
+
+                <div id="adminMenu">
+                    <p class="muted">
+                        Cargando platillos...
+                    </p>
+                </div>
+
+            </section>
+
+
+            <!-- ADMINISTRAR PEDIDOS -->
+            <section class="panel">
+
+                <h2>📋 Pedidos recibidos</h2>
+
+                <p class="muted">
+                    Consulta los pedidos ordenados por fecha y hora.
+                </p>
+
+                <div id="adminPedidos">
+                    <p class="muted">
+                        Cargando pedidos...
+                    </p>
+                </div>
+
+            </section>
+
+        </section>
+
+    </main>
+
+
+    <!-- FIREBASE -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+
+    <!-- ARCHIVOS JAVASCRIPT -->
+    <script src="js/firebase.js"></script>
+
+    <script src="js/encargada.js"></script>
+
+</body>
+</html>

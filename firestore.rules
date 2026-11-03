@@ -1,0 +1,29 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function staff() {
+      return signedIn() &&
+        request.auth.token.email in ['9198@gmail.com'];
+    }
+    match /menu/{itemId} {
+      allow read: if signedIn();
+      allow create, update, delete: if staff();
+    }
+    match /alumnos/{uid} {
+      allow create, read, update: if signedIn() && request.auth.uid == uid;
+      allow delete: if false;
+    }
+    match /pedidos/{orderId} {
+      allow create: if signedIn()
+        && request.resource.data.alumnoUid == request.auth.uid
+        && request.resource.data.total is number
+        && request.resource.data.total > 0
+        && request.resource.data.estado == 'Recibido';
+      allow read: if signedIn() &&
+        (resource.data.alumnoUid == request.auth.uid || staff());
+      allow update: if staff();
+      allow delete: if false;
+    }
+  }
+}

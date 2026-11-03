@@ -1,0 +1,248 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Portal del alumno | Cafetería escolar</title>
+
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+
+<body>
+
+    <!-- ENCABEZADO -->
+    <header class="barra">
+        <a href="index.html" class="marca">
+            ← Cafetería escolar
+        </a>
+
+        <span>Portal del alumno</span>
+    </header>
+
+    <main class="contenedor">
+
+        <!-- REGISTRO -->
+        <section id="registro" class="panel estrecho">
+
+            <h1>Registro de alumno</h1>
+
+            <p class="muted">
+                Ingresa tus datos para consultar el menú de la cafetería.
+            </p>
+
+            <form id="formAlumno">
+
+                <label for="nombre">Nombre completo</label>
+
+                <input
+                    type="text"
+                    id="nombre"
+                    name="nombre"
+                    placeholder="Ej. juan perez"
+                    minlength="3"
+                    maxlength="70"
+                    pattern="[A-Za-zÁÉÍÓÚáéíóúÜüÑñ ]+"
+                    required
+                >
+
+                <label for="grupo">Grupo</label>
+
+                <input
+                    type="text"
+                    id="grupo"
+                    name="grupo"
+                    placeholder="Ej. 502"
+                    maxlength="12"
+                    required
+                >
+
+                <label for="semestre">Semestre</label>
+
+                <select id="semestre" name="semestre" required>
+                    <option value="">Selecciona tu semestre</option>
+                    <option value="1er semestre">1er semestre</option>
+                    <option value="2do semestre">2do semestre</option>
+                    <option value="3er semestre">3er semestre</option>
+                    <option value="4to semestre">4to semestre</option>
+                    <option value="5to semestre">5to semestre</option>
+                    <option value="6to semestre">6to semestre</option>
+                </select>
+
+                <button class="boton principal" type="submit">
+                    Entrar al menú
+                </button>
+
+                <p id="registroMsg" class="mensaje" aria-live="polite"></p>
+
+            </form>
+        </section>
+
+
+        <!-- ZONA DEL ALUMNO -->
+        <section id="zonaAlumno" hidden>
+
+            <div class="encabezado-seccion">
+
+                <div>
+                    <span class="etiqueta">BIENVENIDO/A</span>
+
+                    <h1 id="saludo">Menú de hoy</h1>
+
+                    <p class="muted">
+                        Selecciona tus platillos y agrégalos a tu pedido.
+                    </p>
+                </div>
+
+                <button
+                    id="cambiarAlumno"
+                    class="boton secundario"
+                    type="button"
+                >
+                    Cambiar alumno
+                </button>
+
+            </div>
+
+
+            <!-- MENÚ -->
+            <section>
+                <h2>Menú disponible</h2>
+
+                <div id="menuAlumno" class="grid-menu">
+                    <p class="muted">Cargando menú...</p>
+                </div>
+            </section>
+
+
+            <!-- CARRITO -->
+            <section class="panel carrito">
+
+                <div class="encabezado-seccion">
+
+                    <div>
+                        <h2>🛒 Mi pedido</h2>
+
+                        <p class="muted">
+                            Revisa tus productos antes de confirmar.
+                        </p>
+                    </div>
+
+                    <strong id="total" class="total">
+                        $0.00
+                    </strong>
+
+                </div>
+
+                <div id="carritoLista">
+                    <p class="muted">
+                        Aún no agregas productos.
+                    </p>
+                </div>
+
+                <form id="formPedido">
+
+                    <label for="pago">Forma de pago</label>
+
+                    <select id="pago" required>
+                        <option value="">Selecciona cómo pagarás</option>
+                        <option value="Efectivo">Efectivo</option>
+                        <option value="Transferencia">Transferencia</option>
+                    </select>
+
+                    <div id="transferenciaInfo" class="aviso" hidden>
+                        Seleccionaste transferencia.
+                        La encargada deberá validar el pago.
+                    </div>
+
+                    <button class="boton principal" type="submit">
+                        Confirmar pedido
+                    </button>
+
+                    <p id="pedidoMsg" class="mensaje" aria-live="polite"></p>
+
+                </form>
+
+            </section>
+
+
+            <!-- HISTORIAL -->
+            <section class="panel">
+
+                <h2>Mis pedidos</h2>
+
+                <p class="muted">
+                    Consulta el estado de tus pedidos.
+                </p>
+
+                <div id="misPedidos">
+                    <p class="muted">
+                        Todavía no tienes pedidos.
+                    </p>
+                </div>
+
+            </section>
+
+        </section>
+
+    </main>
+
+
+    <!-- VENTANA DEL CÓDIGO QR -->
+    <div id="qrModal" class="modal" hidden>
+
+        <div class="modal-contenido">
+
+            <button
+                id="cerrarQr"
+                class="cerrar"
+                type="button"
+                aria-label="Cerrar"
+            >
+                ×
+            </button>
+
+            <h2>¡Pedido registrado!</h2>
+
+            <p>
+                Guarda tu código QR y muéstralo al recoger tu pedido.
+            </p>
+
+            <div id="qr"></div>
+
+            <p id="qrDatos" class="muted"></p>
+
+            <button
+                id="descargarQr"
+                class="boton principal"
+                type="button"
+            >
+                Descargar código QR
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- FIREBASE -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+
+    <!-- GENERADOR QR -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+
+    <!-- ARCHIVOS JAVASCRIPT -->
+    <script src="js/firebase.js"></script>
+
+    <script src="js/alumno.js"></script>
+
+</body>
+</html>

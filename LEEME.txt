@@ -1,0 +1,37 @@
+CAFETERÍA ESCOLAR - INSTRUCCIONES
+
+ARCHIVOS
+- index.html: pantalla inicial con los dos accesos.
+- alumno.html: registro, menú, carrito, pago, QR y seguimiento.
+- encargada.html: inicio de sesión, administración del menú y pedidos.
+- css/estilos.css: diseño adaptable.
+- js/firebase.js: configuración de Firebase y correo autorizado.
+- js/alumno.js / js/encargada.js: funciones de cada acceso.
+- firestore.rules: reglas iniciales de seguridad.
+
+ANTES DE USAR
+1. Crea un proyecto en https://console.firebase.google.com/
+2. Agrega una aplicación web y copia su configuración en js/firebase.js.
+3. En Authentication > Sign-in method activa:
+   - Anonymous (para el registro sencillo del alumno).
+   - Email/Password (para la encargada).
+4. En Authentication > Users crea la cuenta de correo/contraseña de la encargada.
+5. En js/firebase.js reemplaza CORREOS_AUTORIZADOS por el correo real de esa cuenta.
+6. En Firestore Database crea la base de datos.
+7. Publica las reglas de firestore.rules. MUY IMPORTANTE: usa el mismo correo en la función staff() de firestore.rules.
+8. Ejecuta la página con Live Server desde Visual Studio Code.
+
+PAGOS
+Este proyecto registra el método elegido, pero NO cobra dinero ni confirma una transferencia automáticamente.
+- Efectivo: queda como "Pendiente de pago".
+- Transferencia: queda como "Pendiente de validación".
+Agrega los datos bancarios oficiales de la escuela en el aviso de transferencia y establece un proceso para que la encargada valide el pago antes de marcarlo como pagado.
+
+QR
+El QR contiene folio, alumno, grupo, fecha, productos, total y método de pago. Es un comprobante de pedido; no es una confirmación bancaria.
+
+NOTIFICACIONES
+La pantalla del alumno escucha los cambios de estado en tiempo real mientras mantiene la sesión anónima del navegador. Para avisos aunque la página esté cerrada se necesita agregar Firebase Cloud Messaging y permisos de notificación.
+
+SEGURIDAD
+Las reglas incluidas son una base inicial. Cambia el correo de ejemplo en AMBOS lugares. Para un sistema escolar real conviene validar pedidos y precios desde un backend/Cloud Functions, limitar los datos y configurar reglas más estrictas. No publiques las claves privadas ni contraseñas en el código.
