@@ -8,20 +8,20 @@
 
     <title>Acceso de encargada | Cafetería escolar</title>
 
-    <link rel="stylesheet" href="css/estilos.css">
+    <!-- ESTILOS CSS -->
+    <link rel="stylesheet" href="./estilos.css">
 </head>
 
 <body>
 
     <!-- ENCABEZADO -->
     <header class="barra">
-        <a href="index.html" class="marca">
+        <a href="./index.html" class="marca">
             ← Cafetería escolar
         </a>
 
         <span>Panel de encargada</span>
     </header>
-
 
     <main class="contenedor">
 
@@ -56,10 +56,7 @@
                     required
                 >
 
-                <button
-                    type="submit"
-                    class="boton principal"
-                >
+                <button type="submit" class="boton principal">
                     Iniciar sesión
                 </button>
 
@@ -73,16 +70,13 @@
 
         </section>
 
-
         <!-- PANEL ADMINISTRATIVO -->
         <section id="panelEncargada" hidden>
 
             <div class="encabezado-seccion">
 
                 <div>
-                    <span class="etiqueta">
-                        ADMINISTRACIÓN
-                    </span>
+                    <span class="etiqueta">ADMINISTRACIÓN</span>
 
                     <h1>Panel de control</h1>
 
@@ -101,7 +95,6 @@
 
             </div>
 
-
             <!-- ADMINISTRAR MENÚ -->
             <section class="panel">
 
@@ -113,10 +106,7 @@
 
                 <form id="formPlatillo">
 
-                    <input
-                        type="hidden"
-                        id="platilloId"
-                    >
+                    <input type="hidden" id="platilloId">
 
                     <label for="nombrePlatillo">
                         Nombre del platillo
@@ -130,9 +120,7 @@
                         required
                     >
 
-                    <label for="descripcion">
-                        Descripción
-                    </label>
+                    <label for="descripcion">Descripción</label>
 
                     <textarea
                         id="descripcion"
@@ -140,9 +128,7 @@
                         rows="3"
                     ></textarea>
 
-                    <label for="precio">
-                        Precio
-                    </label>
+                    <label for="precio">Precio</label>
 
                     <input
                         type="number"
@@ -153,9 +139,7 @@
                         required
                     >
 
-                    <label for="imagen">
-                        URL de imagen
-                    </label>
+                    <label for="imagen">URL de imagen</label>
 
                     <input
                         type="url"
@@ -163,9 +147,7 @@
                         placeholder="https://ejemplo.com/imagen.jpg"
                     >
 
-                    <label for="activo">
-                        Disponibilidad
-                    </label>
+                    <label for="activo">Disponibilidad</label>
 
                     <select id="activo">
                         <option value="true">Disponible</option>
@@ -205,13 +187,10 @@
                 <h3>Platillos registrados</h3>
 
                 <div id="adminMenu">
-                    <p class="muted">
-                        Cargando platillos...
-                    </p>
+                    <p class="muted">Cargando platillos...</p>
                 </div>
 
             </section>
-
 
             <!-- ADMINISTRAR PEDIDOS -->
             <section class="panel">
@@ -223,9 +202,7 @@
                 </p>
 
                 <div id="adminPedidos">
-                    <p class="muted">
-                        Cargando pedidos...
-                    </p>
+                    <p class="muted">Cargando pedidos...</p>
                 </div>
 
             </section>
@@ -234,7 +211,6 @@
 
     </main>
 
-
     <!-- FIREBASE -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 
@@ -242,11 +218,10 @@
 
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
-
     <!-- ARCHIVOS JAVASCRIPT -->
-    <script src="js/firebase.js"></script>
+    <script src="./firebase.js"></script>
 
-    <script src="js/encargada.js"></script>
+    <script src="./encargada.js"></script>
 
 </body>
 </html>
