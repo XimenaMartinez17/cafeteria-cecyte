@@ -8,14 +8,15 @@
 
     <title>Portal del alumno | Cafetería escolar</title>
 
-    <link rel="stylesheet" href="css/estilos.css">
+    <!-- ESTILOS CSS -->
+    <link rel="stylesheet" href="./estilos.css">
 </head>
 
 <body>
 
     <!-- ENCABEZADO -->
     <header class="barra">
-        <a href="index.html" class="marca">
+        <a href="./index.html" class="marca">
             ← Cafetería escolar
         </a>
 
@@ -41,7 +42,7 @@
                     type="text"
                     id="nombre"
                     name="nombre"
-                    placeholder="Ej. juan perez"
+                    placeholder="Ej. Juan Pérez"
                     minlength="3"
                     maxlength="70"
                     pattern="[A-Za-zÁÉÍÓÚáéíóúÜüÑñ ]+"
@@ -80,7 +81,6 @@
             </form>
         </section>
 
-
         <!-- ZONA DEL ALUMNO -->
         <section id="zonaAlumno" hidden>
 
@@ -106,7 +106,6 @@
 
             </div>
 
-
             <!-- MENÚ -->
             <section>
                 <h2>Menú disponible</h2>
@@ -115,7 +114,6 @@
                     <p class="muted">Cargando menú...</p>
                 </div>
             </section>
-
 
             <!-- CARRITO -->
             <section class="panel carrito">
@@ -167,7 +165,6 @@
 
             </section>
 
-
             <!-- HISTORIAL -->
             <section class="panel">
 
@@ -188,7 +185,6 @@
         </section>
 
     </main>
-
 
     <!-- VENTANA DEL CÓDIGO QR -->
     <div id="qrModal" class="modal" hidden>
@@ -226,7 +222,6 @@
 
     </div>
 
-
     <!-- FIREBASE -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 
@@ -234,15 +229,13 @@
 
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
-
     <!-- GENERADOR QR -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
-
     <!-- ARCHIVOS JAVASCRIPT -->
-    <script src="js/firebase.js"></script>
+    <script src="./firebase.js"></script>
 
-    <script src="js/alumno.js"></script>
+    <script src="./alumno.js"></script>
 
 </body>
 </html>
